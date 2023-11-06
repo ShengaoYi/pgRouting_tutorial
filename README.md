@@ -27,10 +27,17 @@ Follow these steps to use the tutorial:
 ### 1. Creating a Topological Network
 
 ```sql
+
+SET search_path to public;
+
+-- Check pgr version
+select pgr_version();
+
 ALTER TABLE nyc_road_direction_speed
 ADD COLUMN "source" INTEGER,
 ADD COLUMN "target" INTEGER,
-
+ADD COLUMN cost DOUBLE PRECISION,
+ADD COLUMN reverse_cost DOUBLE PRECISION;
 ```
 SELECT pgr_createTopology('nyc_road_direction_speed', 0.00001, 'geom', 'gid');
 
