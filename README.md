@@ -24,7 +24,7 @@ Ensure you have the following before starting:
 
 Follow these steps to use the tutorial:
 
-### 1. Creating a Topological Network [https://docs.pgrouting.org/latest/en/pgr_createTopology.html]
+### 1. Creating a [Topological Network](https://docs.pgrouting.org/latest/en/pgr_createTopology.html)
 
 ```sql
 
