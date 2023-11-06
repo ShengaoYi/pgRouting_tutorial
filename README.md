@@ -47,7 +47,11 @@ This GeoJSON file represents the road network of New York City and includes the 
 - `gid`: A unique identifier for each road segment.
 - `rw_type`: The type of road or pathway.
 - `shape_leng`: The length of the road segment.
-- `trafdir`: The traffic directionality of the road segment, indicating if the road is one-way or two-way.
+- `trafdir`: The traffic directionality of the road segment. The values represent:
+  - `FT`: Indicates that travel is only allowed in the 'from-to' direction (one-way).
+  - `TF`: Indicates that travel is only allowed in the 'to-from' direction (one-way).
+  - `TW`: Indicates that travel is allowed in both directions (two-way).
+  - `NV`: Indicates that the road segment is not valid for vehicular traffic in either direction.
 - `postvz_sl`: Posted speed limit on the road segment.
 
 These datasets are critical for the execution of the routing algorithms and are presumed to be pre-loaded into your spatially enabled PostgreSQL database.
