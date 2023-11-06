@@ -163,11 +163,14 @@ SET time_cost = CASE
   15916, 3253, false);
  
 ```
-3. **Multiple Pair Routing:** Use the provided routing script to calculate routes for multiple orders at once.
-4. **Directional Routing Analysis:** Compare the results of routing with one-directional and two-directional considerations.
-5. **Speed Limit Adjustment:** Adjust your network data for speed limits and recalculate routes based on time cost.
-6. **TSP Solution:** Finally, explore the TSP solution using pgRouting functions.
-
+### 6. [Traveling Salesperson Problem](https://docs.pgrouting.org/latest/en/pgr_TSP.html)
+```sql
+ SELECT * FROM pgr_TSP(
+  $$SELECT * FROM pgr_dijkstraCostMatrix(
+    'SELECT gid as id, source, target, cost, reverse_cost FROM nyc_road_direction_speed',
+    ARRAY[9039, 36392, 47812, 59919, 31622],  -- List of node IDs to visit
+    directed => false) $$);
+```
 ## Contributing
 
 Contributions to this tutorial are welcome! Please feel free to fork the repository, make your changes, and submit a pull request.
