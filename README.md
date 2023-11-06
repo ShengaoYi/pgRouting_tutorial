@@ -38,6 +38,32 @@ ADD COLUMN "source" INTEGER,
 ADD COLUMN "target" INTEGER,
 ADD COLUMN cost DOUBLE PRECISION,
 ADD COLUMN reverse_cost DOUBLE PRECISION;
+
+UPDATE nyc_road_direction_speed
+SET cost = CASE
+        WHEN trafdir = 'FT' THEN shape_leng::double precision  -- Forward direction is passable, set cost as the shape_leng
+        WHEN trafdir = 'TF' THEN -1 -- Forward direction is not passable, set a high cost
+        WHEN trafdir = 'TW' THEN shape_leng::double precision -- Both directions are passable, set cost as the shape_leng
+        WHEN trafdir = 'NV' THEN -1 -- Both directions are impassable, set a high cost
+        ELSE -1 -- For any other value, set as impassable
+    END,
+    reverse_cost = CASE
+        WHEN trafdir = 'FT' THEN -1 -- Reverse direction is not passable, set a high cost
+        WHEN trafdir = 'TF' THEN shape_leng::double precision -- Reverse direction is passable, set cost as the shape_leng
+        WHEN trafdir = 'TW' THEN shape_leng::double precision -- Both directions are passable, set cost as the shape_leng
+        WHEN trafdir = 'NV' THEN -1 -- Both directions are impassable, set a high cost
+        ELSE -1 -- For any other value, set as impassable
+    END;
+
+SELECT pgr_createTopology(
+	'nyc_road_direction_speed', 
+	0.00001,
+	'geom',
+	'gid',
+	'source',
+	'target'
+);
+
 ```
 SELECT pgr_createTopology('nyc_road_direction_speed', 0.00001, 'geom', 'gid');
 
