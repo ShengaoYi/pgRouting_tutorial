@@ -65,9 +65,28 @@ SELECT pgr_createTopology(
 );
 
 ```
+### 2. Preparing Order Data
 
+```sql
 
-1. **Network Creation:** Begin by running the network creation script to add necessary columns and create the topology.
+UPDATE "order"
+SET pickup_node = (
+  SELECT node.id
+  FROM nyc_road_direction_speed_vertices_pgr AS node
+  ORDER BY node.the_geom <-> ST_SetSRID(ST_MakePoint(pickup_longitude::double precision, pickup_latitude::double precision), 4326)
+  LIMIT 1
+);
+
+UPDATE "order"
+SET dropoff_node = (
+  SELECT node.id
+  FROM nyc_road_direction_speed_vertices_pgr AS node
+  ORDER BY node.the_geom <-> ST_SetSRID(ST_MakePoint(dropoff_longitude::double precision, dropoff_latitude::double precision), 4326)
+  LIMIT 1
+);
+
+```
+
 2. **Data Preparation:** Execute the data preparation queries to calculate the nearest nodes for pickup and dropoff points.
 3. **Multiple Pair Routing:** Use the provided routing script to calculate routes for multiple orders at once.
 4. **Directional Routing Analysis:** Compare the results of routing with one-directional and two-directional considerations.
