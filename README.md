@@ -24,7 +24,7 @@ Ensure you have the following before starting:
 
 Follow these steps to use the tutorial:
 
-### 1. Creating a Topological Network
+### 1. Creating a Topological Network,  https://docs.pgrouting.org/latest/en/pgr_createTopology.html
 
 ```sql
 
@@ -65,7 +65,6 @@ SELECT pgr_createTopology(
 );
 
 ```
-SELECT pgr_createTopology('nyc_road_direction_speed', 0.00001, 'geom', 'gid');
 
 
 1. **Network Creation:** Begin by running the network creation script to add necessary columns and create the topology.
