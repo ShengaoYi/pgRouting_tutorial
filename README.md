@@ -30,7 +30,8 @@ Follow these steps to use the tutorial:
 ALTER TABLE nyc_road_direction_speed
 ADD COLUMN "source" INTEGER,
 ADD COLUMN "target" INTEGER,
-...
+
+```
 SELECT pgr_createTopology('nyc_road_direction_speed', 0.00001, 'geom', 'gid');
 
 
