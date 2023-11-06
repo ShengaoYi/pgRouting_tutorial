@@ -87,7 +87,82 @@ SET dropoff_node = (
 
 ```
 
-2. **Data Preparation:** Execute the data preparation queries to calculate the nearest nodes for pickup and dropoff points.
+### 3. Routing for [Multiple Pairs](https://docs.pgrouting.org/latest/en/pgr_aStar.html)
+```sql
+
+ALTER TABLE nyc_road_direction_speed
+ADD COLUMN x1 DOUBLE PRECISION,
+ADD COLUMN y1 DOUBLE PRECISION,
+ADD COLUMN x2 DOUBLE PRECISION,
+ADD COLUMN y2 DOUBLE PRECISION;
+
+UPDATE nyc_road_direction_speed n
+SET x1 = ST_X(sn.the_geom),
+    y1 = ST_Y(sn.the_geom),
+    x2 = ST_X(en.the_geom),
+    y2 = ST_Y(en.the_geom)
+FROM nyc_road_direction_speed_vertices_pgr sn, nyc_road_direction_speed_vertices_pgr en
+WHERE n.source = sn.id
+AND n.target = en.id;
+
+SELECT
+  o.id,
+  o.pickup_node,
+  o.dropoff_node,
+  pgr_astar(
+    'SELECT gid as id, source, target, cost, x1, y1, x2, y2 FROM nyc_road_direction_speed',
+    o.pickup_node,
+    o.dropoff_node,
+    directed := false
+  ) as route
+FROM
+  "order" o;
+
+```
+
+### 4. [Directional Routing Differences](https://docs.pgrouting.org/latest/en/pgr_dijkstra.html)
+```sql
+ SELECT * FROM pgr_Dijkstra(
+  'select gid as id, source, target, cost, reverse_cost from nyc_road_direction_speed',
+  15916, 3253, true);
+  
+  SELECT * FROM pgr_Dijkstra(
+  'select gid as id, source, target, cost, reverse_cost from nyc_road_direction_speed',
+  15916, 3253, false);
+```
+
+### 5. Speed Limit Considerations
+```sql
+ -- Add new columns for time-based cost
+ALTER TABLE nyc_road_direction_speed 
+ADD COLUMN time_cost DOUBLE PRECISION
+ADD COLUMN time_reverse_cost DOUBLE PRECISION;
+
+-- Change the speed limit 0 to 25.
+UPDATE nyc_road_direction_speed
+SET postvz_sl = '25'
+WHERE postvz_sl = '0';
+
+-- Update the new columns with calculated time-based cost
+UPDATE nyc_road_direction_speed
+SET time_cost = CASE
+                  WHEN cost > 0 THEN shape_leng::double precision / (postvz_sl::double precision * 1609.34 / 3600)
+                  ELSE -1
+                END,
+    time_reverse_cost = CASE
+                          WHEN reverse_cost > 0 THEN shape_leng::double precision / (postvz_sl::double precision * 1609.34 / 3600)
+                          ELSE -1
+                        END;
+                    
+ SELECT * FROM pgr_Dijkstra(
+  'select gid as id, source, target, time_cost as cost, time_reverse_cost as reverse_cost from nyc_road_direction_speed',
+  15916, 3253, true);
+ 
+ SELECT * FROM pgr_Dijkstra(
+  'select gid as id, source, target, time_cost as cost, time_reverse_cost as reverse_cost from nyc_road_direction_speed',
+  15916, 3253, false);
+ 
+```
 3. **Multiple Pair Routing:** Use the provided routing script to calculate routes for multiple orders at once.
 4. **Directional Routing Analysis:** Compare the results of routing with one-directional and two-directional considerations.
 5. **Speed Limit Adjustment:** Adjust your network data for speed limits and recalculate routes based on time cost.
