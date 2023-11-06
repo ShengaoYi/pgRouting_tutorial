@@ -20,6 +20,42 @@ Ensure you have the following before starting:
 - PostgreSQL with PostGIS and pgRouting extensions installed.
 - A spatially enabled database with `nyc_road_direction_speed` and `order` tables present.
 
+## Data Description
+
+This tutorial uses two primary data sources:
+
+### `order.csv`
+
+This file contains records of transportation orders with the following fields:
+
+- `id`: Unique identifier for the order.
+- `vendor_id`: Identifier for the vendor fulfilling the order.
+- `pickup_datetime`: Timestamp for when the passenger was picked up.
+- `dropoff_datetime`: Timestamp for when the passenger was dropped off.
+- `passenger_count`: The number of passengers in the order.
+- `pickup_longitude`: Longitude where the passenger was picked up.
+- `pickup_latitude`: Latitude where the passenger was picked up.
+- `dropoff_longitude`: Longitude where the passenger was dropped off.
+- `dropoff_latitude`: Latitude where the passenger was dropped off.
+- `store_and_fwd_flag`: A flag indicating if the trip data was sent immediately to the vendor (“N”) or held in the memory of the taxi because there was no connection to the server (“Y”).
+- `trip_duration`: Duration of the trip in seconds.
+
+### `nyc_road_direction_speed.geojson`
+
+This GeoJSON file represents the road network of New York City and includes the following attributes:
+
+- `gid`: A unique identifier for each road segment.
+- `rw_type`: The type of road or pathway.
+- `shape_leng`: The length of the road segment.
+- `trafdir`: The traffic directionality of the road segment, indicating if the road is one-way or two-way.
+- `postvz_sl`: Posted speed limit on the road segment.
+
+These datasets are critical for the execution of the routing algorithms and are presumed to be pre-loaded into your spatially enabled PostgreSQL database.
+
+### Note on Coordinate Reference System (CRS)
+
+The coordinates in `order.csv` are assumed to be in the WGS 84 coordinate system, which is the standard for GeoJSON files. Ensure that your database setup accounts for this when performing spatial queries.
+
 ## Usage
 
 Follow these steps to use the tutorial:
