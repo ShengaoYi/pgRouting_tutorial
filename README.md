@@ -1,28 +1,38 @@
 # pgRouting Tutorial
 
-Welcome to the pgRouting Tutorial repository. This tutorial is designed to help users understand and implement network routing using pgRouting, an extension of PostGIS and PostgreSQL. The provided SQL scripts walk through several common tasks and challenges in network analysis.
+Welcome to the pgRouting Tutorial repository. This tutorial provides practical guidance on implementing network routing with pgRouting, an extension of PostGIS and PostgreSQL. Within, you will find SQL scripts for various tasks in network analysis.
 
 ## Overview
 
-The tutorial covers:
+The tutorial covers several operations:
 
-1. **Creating a Topological Network:** Set up your network topology for routing with `pgr_createTopology`.
-2. **Preparing Order Data:** Associate order locations with the nearest network nodes.
-3. **Routing for Multiple Pairs:** Use `pgr_aStar` to find the best paths for multiple source-destination pairs.
-4. **Directional Routing Differences:** Explore the implications of one-way vs. two-way streets with `pgr_dijkstra`.
-5. **Speed Limit Considerations:** Incorporate speed limits into route planning for more accurate travel time estimates.
-6. **Traveling Salesperson Problem (TSP):** Solve routing sequences for multiple locations with `pgr_TSP`.
+1. **Creating a Topological Network:** Initializes the network topology for routing.
+2. **Preparing Order Data:** Associates order locations with the closest network nodes.
+3. **Routing for Multiple Pairs:** Determines optimal paths for multiple pairs using `pgr_aStar`.
+4. **Directional Routing Differences:** Demonstrates one-way vs. two-way street routing with `pgr_dijkstra`.
+5. **Speed Limit Considerations:** Adjusts routes to consider varying speed limits.
+6. **Traveling Salesperson Problem (TSP):** Solves the TSP for a set of locations.
 
 ## Prerequisites
 
-To use this tutorial, you'll need:
+Ensure you have the following before starting:
 
-- PostgreSQL with PostGIS and pgRouting extensions.
-- A spatially enabled database with the `nyc_road_direction_speed` and `order` tables.
+- PostgreSQL with PostGIS and pgRouting extensions installed.
+- A spatially enabled database with `nyc_road_direction_speed` and `order` tables present.
 
 ## Usage
 
-The SQL files in this repository are meant to be run sequentially. Each file corresponds to a section in the tutorial:
+Follow these steps to use the tutorial:
+
+### 1. Creating a Topological Network
+
+```sql
+ALTER TABLE nyc_road_direction_speed
+ADD COLUMN "source" INTEGER,
+ADD COLUMN "target" INTEGER,
+...
+SELECT pgr_createTopology('nyc_road_direction_speed', 0.00001, 'geom', 'gid');
+
 
 1. **Network Creation:** Begin by running the network creation script to add necessary columns and create the topology.
 2. **Data Preparation:** Execute the data preparation queries to calculate the nearest nodes for pickup and dropoff points.
