@@ -223,7 +223,7 @@ pgRouting extends the capabilities of PostGIS and PostgreSQL by providing geospa
 
 2. **Preparing Data for pgRouting**:
    - Once you have your network data in the database, you need to assign source and target nodes to each edge and calculate the cost for each edge.
-   - ```
+   ```
      UPDATE "order"
       SET pickup_node = (
         SELECT node.id
