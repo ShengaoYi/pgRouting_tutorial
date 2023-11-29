@@ -172,7 +172,6 @@ pgRouting is an extension of the PostGIS spatial database, which itself is an ex
        start_id, end_id, directed := true
      );
      ```
-   - Explanation of parameters and results.
 
 ### Understanding Graphs and Networks in pgRouting
 
