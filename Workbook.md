@@ -187,8 +187,7 @@ pgRouting extends the capabilities of PostGIS and PostgreSQL by providing geospa
 #### Building and Querying Network Data
 
 1. **Creating a Topological Network**:
-   - To use pgRouting, you first need to create a network. This involves loading spatial data into a PostgreSQL/PostGIS database and then structuring it in a way that pgRouting can interpret.
-   - Example SQL to create a network table:
+   - Example SQL:
      ```sql
      ALTER TABLE nyc_road_direction_speed
       ADD COLUMN "source" INTEGER,
@@ -224,7 +223,23 @@ pgRouting extends the capabilities of PostGIS and PostgreSQL by providing geospa
 
 2. **Preparing Data for pgRouting**:
    - Once you have your network data in the database, you need to assign source and target nodes to each edge and calculate the cost for each edge.
-   - Tools like osm2pgrouting can be used to automatically prepare OpenStreetMap data for pgRouting.
+   - ```
+     UPDATE "order"
+      SET pickup_node = (
+        SELECT node.id
+        FROM nyc_road_direction_speed_vertices_pgr AS node
+        ORDER BY node.the_geom <-> ST_SetSRID(ST_MakePoint(pickup_longitude::double precision, pickup_latitude::double precision), 4326)
+        LIMIT 1
+      );
+      
+      UPDATE "order"
+      SET dropoff_node = (
+        SELECT node.id
+        FROM nyc_road_direction_speed_vertices_pgr AS node
+        ORDER BY node.the_geom <-> ST_SetSRID(ST_MakePoint(dropoff_longitude::double precision, dropoff_latitude::double precision), 4326)
+        LIMIT 1
+      );
+     ```
 
 3. **Basic Network Queries**:
    - With the network data prepared, you can start performing routing queries.
