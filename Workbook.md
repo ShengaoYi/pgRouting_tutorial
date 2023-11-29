@@ -214,7 +214,7 @@ pgRouting extends the capabilities of PostGIS and PostgreSQL by providing geospa
               WHEN trafdir = 'NV' THEN -1 -- Both directions are impassable, set a high cost
               ELSE -1 -- For any other value, set as impassable
           END;
-     -- The pgr_createTopology function is a part of the pgRouting extension for PostgreSQL,
+      -- The pgr_createTopology function is a part of the pgRouting extension for PostgreSQL,
       -- used to create a network topology from a road network table. 
       -- The function takes several parameters, including the name of the table 
       -- containing the road network data, tolerance value, geometry column name, and primary key column name.
@@ -247,21 +247,22 @@ pgRouting extends the capabilities of PostGIS and PostgreSQL by providing geospa
 2. **Preparing Data for pgRouting**:
    - Once you have your network data in the database, you need to assign source and target nodes to each edge and calculate the cost for each edge.
    ```sql
-     UPDATE "order"
-      SET pickup_node = (
-        SELECT node.id
-        FROM nyc_road_direction_speed_vertices_pgr AS node
-        ORDER BY node.the_geom <-> ST_SetSRID(ST_MakePoint(pickup_longitude::double precision, pickup_latitude::double precision), 4326)
-        LIMIT 1
-      );
-      
-      UPDATE "order"
-      SET dropoff_node = (
-        SELECT node.id
-        FROM nyc_road_direction_speed_vertices_pgr AS node
-        ORDER BY node.the_geom <-> ST_SetSRID(ST_MakePoint(dropoff_longitude::double precision, dropoff_latitude::double precision), 4326)
-        LIMIT 1
-      );
+     -- The results are used to update the pickup_node and dropoff_node columns, respectively, in the taxiorder table.
+   UPDATE taxiorder
+   SET pickup_node = ( -- Assign a value to the pickup_node column in the taxiorder table.
+     SELECT node.id 
+     FROM nyc_road_direction_speed_vertices_pgr AS node -- A subquery that retrieves the id column from the nyc_road_direction_speed_vertices_pgr table aliased as node.
+     ORDER BY node.the_geom <-> ST_SetSRID(ST_MakePoint(pickup_longitude::double precision, pickup_latitude::double precision), 4326) -- Calculate the distance between the pickup location (specified by pickup_longitude and pickup_latitude) and the geometries (the_geom) in the nyc_road_direction_speed_vertices_pgr table. It orders the results by proximity, with the closest node first.
+     LIMIT 1 -- Limits the result to the nearest node, ensuring that only one node is selected.
+   );
+   
+   UPDATE taxiorder
+   SET dropoff_node = (
+     SELECT node.id
+     FROM nyc_road_direction_speed_vertices_pgr AS node
+     ORDER BY node.the_geom <-> ST_SetSRID(ST_MakePoint(dropoff_longitude::double precision, dropoff_latitude::double precision), 4326)
+     LIMIT 1
+   );
      ```
 
 Understanding how to model your data as a network in pgRouting is key to performing efficient routing queries. Each edge and node in your network can have multiple attributes that can be used in your routing algorithms, allowing for complex and real-world routing scenarios.
