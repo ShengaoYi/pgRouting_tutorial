@@ -423,21 +423,38 @@ The Traveling Salesperson Problem (TSP) is a classic problem in routing and logi
 SELECT * FROM pgr_TSP(
   $$SELECT * FROM pgr_dijkstraCostMatrix(
     'SELECT gid as id, source, target, cost, reverse_cost FROM nyc_road_direction_speed',
-    ARRAY[9039, 36392, 47812, 59919, 31622],  -- List of node IDs to visit
+    ARRAY[15916, 3253, 31665, 626],  -- List of node IDs to visit
     directed => false) $$); --This inner query calculates the cost matrix for the specified nodes using Dijkstra's algorithm. It uses the pgr_dijkstraCostMatrix function to find the shortest paths between the specified nodes in the nyc_road_direction_speed road network. The SELECT statement creates a cost matrix based on the road network, considering both the forward and reverse costs. The ARRAY specifies the list of node IDs to visit, and directed => false indicates that the graph is undirected.
     -- This outer query solves the Traveling Salesman Problem using the TSP solver provided by pgRouting. It takes the output of the inner query (the cost matrix) as input. The pgr_TSP function finds the optimal order in which to visit the specified nodes (specified in the ARRAY) while minimizing the total travel cost based on the calculated cost matrix.
 
 -- QGIS
--- CTE to calculate cost matrix and TSP
 WITH tsp_result AS (
-    SELECT * FROM pgr_TSP(
-        $$SELECT * FROM pgr_dijkstraCostMatrix(
-            'SELECT gid as id, source, target, cost, reverse_cost FROM nyc_road_direction_speed',
-            ARRAY[9039, 36392, 47812, 59919, 31622],
-            directed => false
-        )$$
-    )
-)
+  SELECT * FROM pgr_TSP(
+    $$SELECT * FROM pgr_dijkstraCostMatrix(
+      'SELECT gid as id, source, target, cost, reverse_cost FROM nyc_road_direction_speed',
+      ARRAY[15916, 3253, 31665, 626],  -- List of node IDs to visit
+      directed => false) $$
+  )
+), tsp_sequence AS (
+  SELECT seq, node, lead(node) OVER (ORDER BY seq) AS next_node
+  FROM tsp_result
+  WHERE seq < (SELECT max(seq) FROM tsp_result)  -- Exclude the last node
+),dijkstra_paths AS (
+  SELECT 
+    tsp.seq AS tsp_seq,
+    dp.*
+  FROM tsp_sequence tsp,
+  LATERAL (
+    SELECT d.* FROM pgr_dijkstra(
+      'SELECT gid AS id, source, target, cost FROM nyc_road_direction_speed',
+      tsp.node,
+      tsp.next_node,
+      directed := false
+    ) AS d WHERE d.edge > -1
+  ) AS dp
+)SELECT * FROM dijkstra_paths
+JOIN nyc_road_direction_speed as edges
+ON dijkstra_paths.edge = edges.gid;
 
 ```
 
