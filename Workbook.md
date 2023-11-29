@@ -477,8 +477,9 @@ This command should return the installed version of pgRouting.
   Answer: pgRouting requires PostgreSQL and PostGIS to be installed. The system requirements are generally those required by these two components. A more powerful CPU and more memory can improve performance, especially for complex queries on large datasets.
 
 ## References
-### Documentation and Further Reading
-- List of references
-- Suggested further reading
+[Topological Network](https://docs.pgrouting.org/latest/en/pgr_createTopology.html)
+[Multiple Pairs](https://docs.pgrouting.org/latest/en/pgr_aStar.html)
+[Directional Routing Differences](https://docs.pgrouting.org/latest/en/pgr_dijkstra.html)
+[Traveling Salesperson Problem](https://docs.pgrouting.org/latest/en/pgr_TSP.html)
 
-## Index
+
