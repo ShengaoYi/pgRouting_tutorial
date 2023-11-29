@@ -189,12 +189,16 @@ pgRouting extends the capabilities of PostGIS and PostgreSQL by providing geospa
 1. **Creating a Topological Network**:
    - Example SQL:
      ```sql
-     ALTER TABLE nyc_road_direction_speed
+     -- Add columns that are typically used for graph representation in routing algorithms
+      ALTER TABLE nyc_road_direction_speed
       ADD COLUMN "source" INTEGER,
       ADD COLUMN "target" INTEGER,
       ADD COLUMN cost DOUBLE PRECISION,
       ADD COLUMN reverse_cost DOUBLE PRECISION;
       
+      -- Update values in the table
+      -- Modify existing rows in the nyc_road_direction_speed table based on the values in the trafdir column.
+      -- Set the cost column and reverse_cost column according to different conditions
       UPDATE nyc_road_direction_speed
       SET cost = CASE
               WHEN trafdir = 'FT' THEN shape_leng::double precision  -- Forward direction is passable, set cost as the shape_leng
@@ -210,14 +214,14 @@ pgRouting extends the capabilities of PostGIS and PostgreSQL by providing geospa
               WHEN trafdir = 'NV' THEN -1 -- Both directions are impassable, set a high cost
               ELSE -1 -- For any other value, set as impassable
           END;
-      
+         
       SELECT pgr_createTopology(
-      	'nyc_road_direction_speed', 
-      	0.00001,
-      	'geom',
-      	'gid',
-      	'source',
-      	'target'
+         'nyc_road_direction_speed', 
+         0.00001,
+         'geom',
+         'gid',
+         'source',
+         'target'
       );
      ```
 
@@ -280,10 +284,14 @@ FROM
 
 ```
 
-
 ### One-Way vs. Two-Way Streets in Routing
-- Handling different types of streets
-- Examples and scenarios
+Routing through a network of streets requires understanding the directionality of each segment.
+
+### Handling Different Types of Streets
+- **Attributes**: Streets are characterized by `cost` and `reverse_cost` in the network data.
+- **One-Way Streets**: Represented by setting a prohibitive `reverse_cost` (like a very high value or -1).
+
+- Examples
 
 ### Considering Speed Limits in Routing
 - Incorporating speed data
