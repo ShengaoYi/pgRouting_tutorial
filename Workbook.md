@@ -241,16 +241,6 @@ pgRouting extends the capabilities of PostGIS and PostgreSQL by providing geospa
       );
      ```
 
-3. **Basic Network Queries**:
-   - With the network data prepared, you can start performing routing queries.
-   - Example: Finding the shortest path using Dijkstra's algorithm:
-     ```sql
-     SELECT * FROM pgr_dijkstra(
-       'SELECT id, source, target, cost FROM network',
-       start_node_id, end_node_id, directed := true
-     );
-     ```
-
 Understanding how to model your data as a network in pgRouting is key to performing efficient routing queries. Each edge and node in your network can have multiple attributes that can be used in your routing algorithms, allowing for complex and real-world routing scenarios.
 
 
