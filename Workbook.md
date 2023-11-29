@@ -374,11 +374,31 @@ FROM shortest_path
 JOIN nyc_road_direction_speed AS edges
 ON shortest_path.edge = edges.gid;
 ```
-- Calculating time-based routes
 
 ### Solving TSP in pgRouting
-- Explanation of the TSP algorithm
-- Practical examples
+The Traveling Salesperson Problem (TSP) is a classic problem in routing and logistics.
+```sql
+-- Traveling Salesperson Problem (TSP) https://docs.pgrouting.org/latest/en/pgr_TSP.html
+SELECT * FROM pgr_TSP(
+  $$SELECT * FROM pgr_dijkstraCostMatrix(
+    'SELECT gid as id, source, target, cost, reverse_cost FROM nyc_road_direction_speed',
+    ARRAY[9039, 36392, 47812, 59919, 31622],  -- List of node IDs to visit
+    directed => false) $$); --This inner query calculates the cost matrix for the specified nodes using Dijkstra's algorithm. It uses the pgr_dijkstraCostMatrix function to find the shortest paths between the specified nodes in the nyc_road_direction_speed road network. The SELECT statement creates a cost matrix based on the road network, considering both the forward and reverse costs. The ARRAY specifies the list of node IDs to visit, and directed => false indicates that the graph is undirected.
+    -- This outer query solves the Traveling Salesman Problem using the TSP solver provided by pgRouting. It takes the output of the inner query (the cost matrix) as input. The pgr_TSP function finds the optimal order in which to visit the specified nodes (specified in the ARRAY) while minimizing the total travel cost based on the calculated cost matrix.
+
+-- QGIS
+-- CTE to calculate cost matrix and TSP
+WITH tsp_result AS (
+    SELECT * FROM pgr_TSP(
+        $$SELECT * FROM pgr_dijkstraCostMatrix(
+            'SELECT gid as id, source, target, cost, reverse_cost FROM nyc_road_direction_speed',
+            ARRAY[9039, 36392, 47812, 59919, 31622],
+            directed => false
+        )$$
+    )
+)
+
+```
 
 ## Chapter 6: Practical Applications and Case Studies
 ### Real-World Examples and Use Cases
