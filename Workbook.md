@@ -493,8 +493,8 @@ SELECT pgr_version();
 ```
 This command should return the installed version of pgRouting.
 
-## Appendix B: Frequently Asked Questions
-### FAQs on pgRouting
+# Appendix B: Frequently Asked Questions
+## FAQs on pgRouting
 - Question: How does pgRouting handle one-way streets in routing?
 
   Answer: pgRouting considers one-way streets by using the reverse_cost parameter in its functions. If reverse_cost is set to a high value or -1, it indicates that the road segment cannot be traversed in the opposite direction.
