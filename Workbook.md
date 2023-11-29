@@ -223,7 +223,7 @@ pgRouting extends the capabilities of PostGIS and PostgreSQL by providing geospa
 
 2. **Preparing Data for pgRouting**:
    - Once you have your network data in the database, you need to assign source and target nodes to each edge and calculate the cost for each edge.
-   ```
+   ```sql
      UPDATE "order"
       SET pickup_node = (
         SELECT node.id
@@ -243,8 +243,44 @@ pgRouting extends the capabilities of PostGIS and PostgreSQL by providing geospa
 
 Understanding how to model your data as a network in pgRouting is key to performing efficient routing queries. Each edge and node in your network can have multiple attributes that can be used in your routing algorithms, allowing for complex and real-world routing scenarios.
 
-
 ## Chapter 5: Advanced Topics in pgRouting
+
+### Routing for Multiple Pairs
+pgRouting offers capabilities to handle routing for multiple pairs of origins and destinations efficiently. This feature is particularly useful in scenarios like fleet management, where you need to determine optimal routes for several vehicles simultaneously.
+
+```sql
+
+ALTER TABLE nyc_road_direction_speed
+ADD COLUMN x1 DOUBLE PRECISION,
+ADD COLUMN y1 DOUBLE PRECISION,
+ADD COLUMN x2 DOUBLE PRECISION,
+ADD COLUMN y2 DOUBLE PRECISION;
+
+UPDATE nyc_road_direction_speed n
+SET x1 = ST_X(sn.the_geom),
+    y1 = ST_Y(sn.the_geom),
+    x2 = ST_X(en.the_geom),
+    y2 = ST_Y(en.the_geom)
+FROM nyc_road_direction_speed_vertices_pgr sn, nyc_road_direction_speed_vertices_pgr en
+WHERE n.source = sn.id
+AND n.target = en.id;
+
+SELECT
+  o.id,
+  o.pickup_node,
+  o.dropoff_node,
+  pgr_astar(
+    'SELECT gid as id, source, target, cost, x1, y1, x2, y2 FROM nyc_road_direction_speed',
+    o.pickup_node,
+    o.dropoff_node,
+    directed := false
+  ) as route
+FROM
+  "order" o;
+
+```
+
+
 ### One-Way vs. Two-Way Streets in Routing
 - Handling different types of streets
 - Examples and scenarios
@@ -256,10 +292,6 @@ Understanding how to model your data as a network in pgRouting is key to perform
 ### Solving TSP in pgRouting
 - Explanation of the TSP algorithm
 - Practical examples
-
-### Working with Geospatial Data
-- Integrating GIS data with routing
-- Spatial queries and analysis
 
 ## Chapter 6: Practical Applications and Case Studies
 ### Real-World Examples and Use Cases
