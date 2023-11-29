@@ -186,17 +186,40 @@ pgRouting extends the capabilities of PostGIS and PostgreSQL by providing geospa
 
 #### Building and Querying Network Data
 
-1. **Creating a Network**:
+1. **Creating a Topological Network**:
    - To use pgRouting, you first need to create a network. This involves loading spatial data into a PostgreSQL/PostGIS database and then structuring it in a way that pgRouting can interpret.
    - Example SQL to create a network table:
      ```sql
-     CREATE TABLE network (
-       id SERIAL PRIMARY KEY,
-       source INT,
-       target INT,
-       cost FLOAT,
-       geom GEOMETRY(LineString, 4326)
-     );
+     ALTER TABLE nyc_road_direction_speed
+      ADD COLUMN "source" INTEGER,
+      ADD COLUMN "target" INTEGER,
+      ADD COLUMN cost DOUBLE PRECISION,
+      ADD COLUMN reverse_cost DOUBLE PRECISION;
+      
+      UPDATE nyc_road_direction_speed
+      SET cost = CASE
+              WHEN trafdir = 'FT' THEN shape_leng::double precision  -- Forward direction is passable, set cost as the shape_leng
+              WHEN trafdir = 'TF' THEN -1 -- Forward direction is not passable, set a high cost
+              WHEN trafdir = 'TW' THEN shape_leng::double precision -- Both directions are passable, set cost as the shape_leng
+              WHEN trafdir = 'NV' THEN -1 -- Both directions are impassable, set a high cost
+              ELSE -1 -- For any other value, set as impassable
+          END,
+          reverse_cost = CASE
+              WHEN trafdir = 'FT' THEN -1 -- Reverse direction is not passable, set a high cost
+              WHEN trafdir = 'TF' THEN shape_leng::double precision -- Reverse direction is passable, set cost as the shape_leng
+              WHEN trafdir = 'TW' THEN shape_leng::double precision -- Both directions are passable, set cost as the shape_leng
+              WHEN trafdir = 'NV' THEN -1 -- Both directions are impassable, set a high cost
+              ELSE -1 -- For any other value, set as impassable
+          END;
+      
+      SELECT pgr_createTopology(
+      	'nyc_road_direction_speed', 
+      	0.00001,
+      	'geom',
+      	'gid',
+      	'source',
+      	'target'
+      );
      ```
 
 2. **Preparing Data for pgRouting**:
