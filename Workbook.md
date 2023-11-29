@@ -65,25 +65,6 @@ Routing in Geographic Information Systems (GIS) plays a crucial role in a wide r
    - Managing and maintaining utility networks such as water, gas, and electricity.
    - Route planning for service appointments and maintenance work.
 
-#### Case Studies and Examples
-
-- **Case Study 1: Optimizing Delivery Routes**
-  - **Background**: A major e-commerce company needed to optimize its delivery routes to reduce delivery times and costs.
-  - **Solution**: Implementation of a GIS-based routing system using pgRouting, taking into account traffic patterns, delivery windows, and vehicle capacity.
-  - **Outcome**: Significant reduction in delivery times and operational costs, leading to increased customer satisfaction.
-
-- **Case Study 2: Emergency Response in Urban Areas**
-  - **Background**: A city's emergency services were facing challenges in reaching incident locations quickly due to traffic and complex urban layouts.
-  - **Solution**: Development of a real-time GIS routing application that provides the fastest routes to emergency responders based on current traffic conditions and road closures.
-  - **Outcome**: Improved response times for emergency services, potentially saving lives and property.
-
-- **Case Study 3: Public Transportation System Analysis**
-  - **Background**: A city wanted to improve its public transportation system to encourage usage and reduce traffic congestion.
-  - **Solution**: Analysis of existing bus and train routes using GIS routing algorithms to identify underserved areas and optimize routes.
-  - **Outcome**: More efficient public transportation network, leading to increased ridership and reduced urban traffic congestion.
-
-These examples illustrate the diverse and impactful applications of routing in GIS, highlighting its significance in solving real-world problems across different sectors.
-
 # Chapter 1: Background on pgRouting
 
 ## History and Development of pgRouting
