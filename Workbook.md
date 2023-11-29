@@ -453,7 +453,10 @@ WITH tsp_result AS (
    
 3. **Install pgRouting**:
 Once PostGIS is installed, pgRouting can be added as an extension. Execute the following SQL commands in your PostgreSQL database:
-
+```sql
+CREATE EXTENSION postgis;
+CREATE EXTENSION pgrouting;
+```
 ### Verifying the Installation
 - How to check the installation
 
