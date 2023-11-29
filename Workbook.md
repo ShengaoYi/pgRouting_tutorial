@@ -318,6 +318,43 @@ FROM
 
 ### One-Way vs. Two-Way Streets in Routing
 Routing through a network of streets requires understanding the directionality of each segment.
+```sql
+-- The pgr_dijkstra function is a part of the pgRouting extension for PostgreSQL and is used for 
+-- finding the shortest path in a graph using Dijkstra's algorithm.
+
+-- The first parameter of pgr_dijkstra is a subquery that selects the necessary columns from your road network table.
+-- Here, gid is used as the ID, source and target represent the start and end nodes of each edge, 
+-- cost represents the cost of moving from the source to the target node, 
+-- and reverse_cost represents the cost of moving in the opposite direction.
+
+-- The second parameter (335) represents the source node ID from which you want to find the shortest path.
+
+-- The third parameter (796) represents the target node ID where you want the shortest path to end.
+
+-- The directed := true argument indicates that the graph is directed. 
+-- Directed graphs have edges with direction, meaning you can only travel in one direction along each edge.
+
+-- This query will find the shortest path in the graph from node 335 to node 796 using Dijkstra's algorithm,
+-- considering the provided edge costs and directions. 
+
+-- The result will include the sequence of nodes and edges that form the shortest path, 
+-- along with the total cost of the path.
+
+SELECT
+  seq,
+  path_seq,
+  node,
+  edge,
+  dijkstra.cost,
+  agg_cost,
+  geom
+FROM pgr_Dijkstra(
+  'select gid as id, source, target, cost, reverse_cost from nyc_road_direction_speed',
+  335, 796, true) as dijkstra
+JOIN nyc_road_direction_speed as edges
+ON dijkstra.edge = edges.gid;
+
+```
 
 ### Considering Speed Limits in Routing
 Incorporating speed limits allows for routing based not just on distance, but on estimated travel time.
