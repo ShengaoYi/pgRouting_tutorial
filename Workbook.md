@@ -1,4 +1,4 @@
-# Workbook Outline for pgRouting
+# Workbook for pgRouting
 
 ## Introduction
 ### Overview of GIS and Routing
