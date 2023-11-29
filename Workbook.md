@@ -319,14 +319,61 @@ FROM
 ### One-Way vs. Two-Way Streets in Routing
 Routing through a network of streets requires understanding the directionality of each segment.
 
-### Handling Different Types of Streets
-- **Attributes**: Streets are characterized by `cost` and `reverse_cost` in the network data.
-- **One-Way Streets**: Represented by setting a prohibitive `reverse_cost` (like a very high value or -1).
-
-- Examples
-
 ### Considering Speed Limits in Routing
-- Incorporating speed data
+Incorporating speed limits allows for routing based not just on distance, but on estimated travel time.
+```sql
+
+-- Consider speed limit
+-- Add new columns for time-based cost
+ALTER TABLE nyc_road_direction_speed 
+ADD COLUMN time_cost DOUBLE precision,
+ADD COLUMN time_reverse_cost DOUBLE PRECISION;
+
+-- Change the speed limit 0 to 25. (In this data, 25 is the majority)
+UPDATE nyc_road_direction_speed
+SET postvz_sl = '25'
+WHERE postvz_sl = '0';
+
+-- Update the new columns with calculated time-based cost
+-- The time_cost and time_reverse_cost columns are populated with time-based costs calculated using the formula: 
+-- (length in meters) / (speed limit in miles per hour * 1609.34 meters per mile / 3600 seconds per hour). 
+-- If the cost or reverse cost is greater than 0 (indicating a valid road segment), the time-based cost is 
+-- calculated; otherwise, the column is set to -1.
+UPDATE nyc_road_direction_speed
+SET time_cost = CASE
+                  WHEN cost > 0 THEN shape_leng::double precision / (postvz_sl::double precision * 1609.34 / 3600)
+                  ELSE -1
+                END,
+    time_reverse_cost = CASE
+                          WHEN reverse_cost > 0 THEN shape_leng::double precision / (postvz_sl::double precision * 1609.34 / 3600)
+                          ELSE -1
+                        END;
+-- Use the pgr_Dijkstra function to find the shortest paths in the nyc_road_direction_speed road network. 
+-- The function is provided with a SQL subquery that selects the necessary columns, including 
+-- the calculated time_cost and time_reverse_cost. 
+-- The function then calculates the shortest path based on these time-based costs. 
+-- The first query considers the graph as directed (true), while the second query considers it as undirected (false).
+ SELECT * FROM pgr_Dijkstra(
+  'select gid as id, source, target, time_cost as cost, time_reverse_cost as reverse_cost from nyc_road_direction_speed',
+  15916, 3253, true);
+
+-- QGIS
+-- Defines a Common Table Expression (CTE) named shortest_path.
+-- CTE stands for Common Table Expression and is defined using the WITH keyword. 
+-- It is a named temporary result set in a SQL query that can reference within the context of a SELECT, INSERT, 
+-- UPDATE, or DELETE statement. 
+
+WITH shortest_path AS (
+    SELECT * FROM pgr_Dijkstra(
+        'SELECT gid AS id, source, target, cost, reverse_cost FROM nyc_road_direction_speed',
+        15916, 3253, true
+    )
+)
+SELECT * 
+FROM shortest_path
+JOIN nyc_road_direction_speed AS edges
+ON shortest_path.edge = edges.gid;
+```
 - Calculating time-based routes
 
 ### Solving TSP in pgRouting
