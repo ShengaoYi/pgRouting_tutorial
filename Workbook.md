@@ -247,7 +247,7 @@ pgRouting extends the capabilities of PostGIS and PostgreSQL by providing geospa
 2. **Preparing Data for pgRouting**:
    - Once you have your network data in the database, you need to assign source and target nodes to each edge and calculate the cost for each edge.
    ```sql
-     -- The results are used to update the pickup_node and dropoff_node columns, respectively, in the taxiorder table.
+   -- The results are used to update the pickup_node and dropoff_node columns, respectively, in the taxiorder table.
    UPDATE taxiorder
    SET pickup_node = ( -- Assign a value to the pickup_node column in the taxiorder table.
      SELECT node.id 
@@ -280,6 +280,10 @@ ADD COLUMN y1 DOUBLE PRECISION,
 ADD COLUMN x2 DOUBLE PRECISION,
 ADD COLUMN y2 DOUBLE PRECISION;
 
+-- Update the newly added columns (x1, y1, x2, y2) using the spatial functions ST_X and ST_Y. 
+-- It updates the nyc_road_direction_speed table by matching the source and target IDs from the table 
+-- with the corresponding IDs in the nyc_road_direction_speed_vertices_pgr table 
+-- and extracting the X and Y coordinates for start and end points of road segments.
 UPDATE nyc_road_direction_speed n
 SET x1 = ST_X(sn.the_geom),
     y1 = ST_Y(sn.the_geom),
@@ -287,8 +291,17 @@ SET x1 = ST_X(sn.the_geom),
     y2 = ST_Y(en.the_geom)
 FROM nyc_road_direction_speed_vertices_pgr sn, nyc_road_direction_speed_vertices_pgr en
 WHERE n.source = sn.id
-AND n.target = en.id;
+AND n.target = en.id; --Specify that the update should be performed only where the source column in the nyc_road_direction_speed table matches the id column in the sn table, and the target column in the nyc_road_direction_speed table matches the id column in the en table. This ensures that the correct spatial data is associated with the corresponding road segments in the nyc_road_direction_speed table.
 
+-- Prepare for the order data
+-- Alter the taxiorder table in the database by adding two new columns: pickup_node and dropoff_node, 
+-- both of type INTEGER. 
+ALTER TABLE taxiorder
+ADD COLUMN pickup_node INTEGER,
+ADD COLUMN dropoff_node INTEGER;
+
+
+-- A function call to pgr_astar, a pgRouting function used for A* shortest path calculations.
 SELECT
   o.id,
   o.pickup_node,
@@ -297,11 +310,10 @@ SELECT
     'SELECT gid as id, source, target, cost, x1, y1, x2, y2 FROM nyc_road_direction_speed',
     o.pickup_node,
     o.dropoff_node,
-    directed := false
+    directed := false -- This parameter indicates that the graph is undirected, meaning that paths can be traversed in both directions
   ) as route
 FROM
-  "order" o;
-
+  taxiorder o;
 ```
 
 ### One-Way vs. Two-Way Streets in Routing
