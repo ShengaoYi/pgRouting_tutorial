@@ -193,12 +193,6 @@ pgRouting is an extension of the PostGIS spatial database, which itself is an ex
      ```
    - Explanation of parameters and results.
 
-2. **Traveling Salesperson Problem**:
-   - Solving TSP using `pgr_TSP`.
-   - Example query and interpretation of the output.
-
-Each of these sections would be expanded with more detailed instructions, code examples, and explanations to provide a thorough guide for setting up and beginning to use pgRouting.
-
 
 ### Understanding Graphs and Networks in pgRouting
 - How pgRouting represents networks
