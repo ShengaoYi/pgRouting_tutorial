@@ -470,10 +470,9 @@ This command should return the installed version of pgRouting.
 
 ### Additional FAQs on pgRouting
 - Question: How does pgRouting handle one-way streets in routing?
-- Answer: pgRouting considers one-way streets by using the reverse_cost parameter in its functions. If reverse_cost is set to a high value or -1, it indicates that the road segment cannot be traversed in the opposite direction.
+  Answer: pgRouting considers one-way streets by using the reverse_cost parameter in its functions. If reverse_cost is set to a high value or -1, it indicates that the road segment cannot be traversed in the opposite direction.
 - Question: What are the system requirements for pgRouting?
-
-Answer: pgRouting requires PostgreSQL and PostGIS to be installed. The system requirements are generally those required by these two components. A more powerful CPU and more memory can improve performance, especially for complex queries on large datasets.
+  Answer: pgRouting requires PostgreSQL and PostGIS to be installed. The system requirements are generally those required by these two components. A more powerful CPU and more memory can improve performance, especially for complex queries on large datasets.
 
 ## References
 ### Documentation and Further Reading
