@@ -214,7 +214,26 @@ pgRouting extends the capabilities of PostGIS and PostgreSQL by providing geospa
               WHEN trafdir = 'NV' THEN -1 -- Both directions are impassable, set a high cost
               ELSE -1 -- For any other value, set as impassable
           END;
+     -- The pgr_createTopology function is a part of the pgRouting extension for PostgreSQL,
+      -- used to create a network topology from a road network table. 
+      -- The function takes several parameters, including the name of the table 
+      -- containing the road network data, tolerance value, geometry column name, and primary key column name.
          
+      -- 'nyc_road_direction_speed': This is the name of the table containing the road network data.
+         
+      -- 0.00001: This is the tolerance value. It determines the distance within which two network nodes 
+      -- will be considered equal. Nodes that are closer than this tolerance value will be snapped together 
+      -- to create a network topology.
+         
+      -- 'geom': This is the name of the geometry column in the nyc_road_direction_speed table. 
+      -- It holds the geometric information (such as LINESTRING) representing the road segments.
+         
+      -- 'gid': This is the primary key column in the nyc_road_direction_speed table. 
+      -- It uniquely identifies each row in the table.
+         
+      -- When you run this query, the pgr_createTopology function will process the road network data,
+      -- snap nearby nodes together based on the specified tolerance, and create a network topology suitable for 
+      -- routing and analysis using pgRouting functions.
       SELECT pgr_createTopology(
          'nyc_road_direction_speed', 
          0.00001,
