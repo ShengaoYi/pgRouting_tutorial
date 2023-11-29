@@ -188,6 +188,11 @@ pgRouting extends the capabilities of PostGIS and PostgreSQL by providing geospa
 1. **Creating a Topological Network**:
    - Example SQL:
      ```sql
+     -- Transform the 'geom' column from EPSG:4326 (WGS 84) to EPSG:2263 (NAD83/New York Long Island) projection
+     ALTER TABLE nyc_road_direction_speed
+     ALTER COLUMN geom TYPE geometry(MultiLineString, 2263)
+       USING ST_Transform(geom, 2263);
+
      -- Add columns that are typically used for graph representation in routing algorithms
       ALTER TABLE nyc_road_direction_speed
       ADD COLUMN "source" INTEGER,
