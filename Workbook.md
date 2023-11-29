@@ -478,8 +478,11 @@ This command should return the installed version of pgRouting.
 
 ## References
 [Topological Network](https://docs.pgrouting.org/latest/en/pgr_createTopology.html)
+
 [Multiple Pairs](https://docs.pgrouting.org/latest/en/pgr_aStar.html)
+
 [Directional Routing Differences](https://docs.pgrouting.org/latest/en/pgr_dijkstra.html)
+
 [Traveling Salesperson Problem](https://docs.pgrouting.org/latest/en/pgr_TSP.html)
 
 
