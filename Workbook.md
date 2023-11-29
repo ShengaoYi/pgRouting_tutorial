@@ -429,32 +429,40 @@ SELECT * FROM pgr_TSP(
 
 -- QGIS
 WITH tsp_result AS (
+  -- Perform the Traveling Salesperson Problem (TSP) calculation using the pgr_TSP function.
   SELECT * FROM pgr_TSP(
     $$SELECT * FROM pgr_dijkstraCostMatrix(
+      -- Define the edges of the graph with costs and reverse costs.
       'SELECT gid as id, source, target, cost, reverse_cost FROM nyc_road_direction_speed',
       ARRAY[15916, 3253, 31665, 626],  -- List of node IDs to visit
-      directed => false) $$
+      directed => false) $$  -- The graph is undirected.
   )
 ), tsp_sequence AS (
+  -- Create a sequence of nodes to visit from the TSP result, excluding the last node.
   SELECT seq, node, lead(node) OVER (ORDER BY seq) AS next_node
   FROM tsp_result
-  WHERE seq < (SELECT max(seq) FROM tsp_result)  -- Exclude the last node
+  WHERE seq < (SELECT max(seq) FROM tsp_result)  -- Exclude the last node to prevent a null in next_node.
 ),dijkstra_paths AS (
+  -- For each node sequence pair, calculate the shortest path using the pgr_dijkstra function.
   SELECT 
-    tsp.seq AS tsp_seq,
+    tsp.seq AS tsp_seq,  -- Preserve the sequence from the TSP result.
     dp.*
   FROM tsp_sequence tsp,
   LATERAL (
+    -- Use a LATERAL join to invoke pgr_dijkstra for each pair of nodes in the sequence.
     SELECT d.* FROM pgr_dijkstra(
       'SELECT gid AS id, source, target, cost FROM nyc_road_direction_speed',
       tsp.node,
       tsp.next_node,
-      directed := false
-    ) AS d WHERE d.edge > -1
+      directed := false  -- The graph is undirected.
+    ) AS d WHERE d.edge > -1  -- Exclude rows where the edge is -1, which indicates no path.
   ) AS dp
-)SELECT * FROM dijkstra_paths
+)
+-- Final SELECT to retrieve the shortest paths with the associated road information from nyc_road_direction_speed.
+SELECT * FROM dijkstra_paths
 JOIN nyc_road_direction_speed as edges
-ON dijkstra_paths.edge = edges.gid;
+ON dijkstra_paths.edge = edges.gid;  -- Join with edges on gid to get the road details for each edge in the paths.
+
 
 ```
 
