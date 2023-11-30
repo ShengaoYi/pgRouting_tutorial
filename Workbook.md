@@ -264,7 +264,7 @@ to grasp in pgRouting is how it represents and works with graphs and networks.
    SET pickup_node = ( -- Assign a value to the pickup_node column in the taxiorder table.
      SELECT node.id 
      FROM nyc_road_direction_speed_vertices_pgr AS node -- A subquery that retrieves the id column from the nyc_road_direction_speed_vertices_pgr table aliased as node.
-     ORDER BY node.the_geom <-> ST_SetSRID(ST_MakePoint(pickup_longitude::double precision, pickup_latitude::double precision), 4326) -- Calculate the distance between the pickup location (specified by pickup_longitude and pickup_latitude) and the geometries (the_geom) in the nyc_road_direction_speed_vertices_pgr table. It orders the results by proximity, with the closest node first.
+     ORDER BY node.the_geom <-> ST_SetSRID(ST_MakePoint(pickup_longitude::double precision, pickup_latitude::double precision), 4326)
      LIMIT 1 -- Limits the result to the nearest node, ensuring that only one node is selected.
    );
    
@@ -303,7 +303,11 @@ SET x1 = ST_X(sn.the_geom),
     y2 = ST_Y(en.the_geom)
 FROM nyc_road_direction_speed_vertices_pgr sn, nyc_road_direction_speed_vertices_pgr en
 WHERE n.source = sn.id
-AND n.target = en.id; --Specify that the update should be performed only where the source column in the nyc_road_direction_speed table matches the id column in the sn table, and the target column in the nyc_road_direction_speed table matches the id column in the en table. This ensures that the correct spatial data is associated with the corresponding road segments in the nyc_road_direction_speed table.
+AND n.target = en.id;
+--Specify that the update should be performed only where the source column in the nyc_road_direction_speed
+--table matches the id column in the sn table, and the target column in the nyc_road_direction_speed table
+--matches the id column in the en table. This ensures that the correct spatial data is associated with
+--the corresponding road segments in the nyc_road_direction_speed table.
 
 -- Prepare for the order data
 -- Alter the taxiorder table in the database by adding two new columns: pickup_node and dropoff_node, 
@@ -432,8 +436,16 @@ SELECT * FROM pgr_TSP(
   $$SELECT * FROM pgr_dijkstraCostMatrix(
     'SELECT gid as id, source, target, cost, reverse_cost FROM nyc_road_direction_speed',
     ARRAY[15916, 3253, 31665, 626],  -- List of node IDs to visit
-    directed => false) $$); --This inner query calculates the cost matrix for the specified nodes using Dijkstra's algorithm. It uses the pgr_dijkstraCostMatrix function to find the shortest paths between the specified nodes in the nyc_road_direction_speed road network. The SELECT statement creates a cost matrix based on the road network, considering both the forward and reverse costs. The ARRAY specifies the list of node IDs to visit, and directed => false indicates that the graph is undirected.
-    -- This outer query solves the Traveling Salesman Problem using the TSP solver provided by pgRouting. It takes the output of the inner query (the cost matrix) as input. The pgr_TSP function finds the optimal order in which to visit the specified nodes (specified in the ARRAY) while minimizing the total travel cost based on the calculated cost matrix.
+    directed => false) $$);
+--This inner query calculates the cost matrix for the specified nodes using Dijkstra's algorithm.
+--It uses the pgr_dijkstraCostMatrix function to find the shortest paths between the specified nodes
+--in the nyc_road_direction_speed road network. The SELECT statement creates a cost matrix based on
+--the road network, considering both the forward and reverse costs. The ARRAY specifies the list of
+--node IDs to visit, and directed => false indicates that the graph is undirected.
+-- This outer query solves the Traveling Salesman Problem using the TSP solver provided by pgRouting.
+--It takes the output of the inner query (the cost matrix) as input. The pgr_TSP function finds the
+--optimal order in which to visit the specified nodes (specified in the ARRAY) while minimizing the total
+--travel cost based on the calculated cost matrix.
 
 -- QGIS
 WITH tsp_result AS (
