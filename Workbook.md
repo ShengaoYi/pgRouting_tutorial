@@ -4,11 +4,13 @@
 
 ## Overview of GIS and Routing
 
-Geographic Information Systems (GIS) are powerful tools used to gather, manage, and analyze data. They are crucial in understanding spatial aspects and patterns of various data points. GIS combines cartography, statistical analysis, and database technology.
+Geographic Information Systems (GIS) are powerful tools used to gather, manage, and analyze data. They are crucial in
+understanding spatial aspects and patterns of various data points. GIS combines cartography, statistical analysis, and database technology.
 
 ### Brief Overview of GIS
 
-GIS allows us to visualize, question, analyze, and interpret data to understand relationships, patterns, and trends in spatial context. It is used across various fields such as urban planning, environmental science, transportation, and many more.
+GIS allows us to visualize, question, analyze, and interpret data to understand relationships, patterns, and trends in
+spatial context. It is used across various fields such as urban planning, environmental science, transportation, and many more.
 
 **Key Components of GIS:**
 - **Maps**: Visual representation of spatial data.
@@ -17,7 +19,8 @@ GIS allows us to visualize, question, analyze, and interpret data to understand 
 
 ### Definition and Importance of Routing in GIS
 
-Routing in GIS refers to the process of determining the most efficient path between two or more locations on a map. This is not just about finding the shortest path, but also the most optimal one based on various criteria like distance, time, or even cost.
+Routing in GIS refers to the process of determining the most efficient path between two or more locations on a map. This is
+not just about finding the shortest path, but also the most optimal one based on various criteria like distance, time, or even cost.
 
 **Why is Routing Important?**
 - **Efficiency**: Determines the best routes for transportation and logistics.
@@ -35,7 +38,8 @@ In the following chapters, we will delve deeper into these concepts, explore var
 
 ### Importance and Applications of Routing in GIS
 
-Routing in Geographic Information Systems (GIS) plays a crucial role in a wide range of applications, impacting various aspects of everyday life as well as numerous industries. Its importance lies in its ability to provide efficient and effective solutions to complex spatial problems.
+Routing in Geographic Information Systems (GIS) plays a crucial role in a wide range of applications, impacting various aspects of 
+everyday life as well as numerous industries. Its importance lies in its ability to provide efficient and effective solutions to complex spatial problems.
 
 #### Real-World Applications
 
@@ -70,7 +74,9 @@ Routing in Geographic Information Systems (GIS) plays a crucial role in a wide r
 ## History and Development of pgRouting
 
 ### Origins of pgRouting
-pgRouting is an extension of the PostGIS spatial database, which itself is an extension of the PostgreSQL database. The development of pgRouting began as a project to extend PostGIS capabilities to include geospatial routing functionalities, allowing for the use of SQL for creating complex routing queries.
+pgRouting is an extension of the PostGIS spatial database, which itself is an extension of the PostgreSQL database. The development
+of pgRouting began as a project to extend PostGIS capabilities to include geospatial routing functionalities, allowing for the use
+of SQL for creating complex routing queries.
 
 ### Evolution over Time
 - **Early Developments**: Initial versions focused on basic routing algorithms and network analysis.
@@ -175,13 +181,15 @@ pgRouting is an extension of the PostGIS spatial database, which itself is an ex
 
 ### Understanding Graphs and Networks in pgRouting
 
-pgRouting extends the capabilities of PostGIS and PostgreSQL by providing geospatial routing functionalities. A fundamental concept to grasp in pgRouting is how it represents and works with graphs and networks.
+pgRouting extends the capabilities of PostGIS and PostgreSQL by providing geospatial routing functionalities. A fundamental concept
+to grasp in pgRouting is how it represents and works with graphs and networks.
 
 #### How pgRouting Represents Networks
 
 - **Graph Theory Basics**: In pgRouting, networks are modeled as graphs. A graph consists of nodes (or vertices) and edges (or links) that connect these nodes.
 - **Nodes**: These are typically intersections, points of interest, or termini in a road network.
-- **Edges**: Represent the road segments or paths that connect nodes. Each edge has attributes such as length, cost (which could be distance, time, or other metrics), and directionality (one-way or two-way).
+- **Edges**: Represent the road segments or paths that connect nodes. Each edge has attributes such as length, cost (which could be
+  distance, time, or other metrics), and directionality (one-way or two-way).
 
 #### Building and Querying Network Data
 
@@ -497,10 +505,12 @@ This command should return the installed version of pgRouting.
 ## FAQs on pgRouting
 - Question: How does pgRouting handle one-way streets in routing?
 
-  Answer: pgRouting considers one-way streets by using the reverse_cost parameter in its functions. If reverse_cost is set to a high value or -1, it indicates that the road segment cannot be traversed in the opposite direction.
+  Answer: pgRouting considers one-way streets by using the reverse_cost parameter in its functions. If reverse_cost is set to a high
+   value or -1, it indicates that the road segment cannot be traversed in the opposite direction.
 - Question: What are the system requirements for pgRouting?
 
-  Answer: pgRouting requires PostgreSQL and PostGIS to be installed. The system requirements are generally those required by these two components. A more powerful CPU and more memory can improve performance, especially for complex queries on large datasets.
+  Answer: pgRouting requires PostgreSQL and PostGIS to be installed. The system requirements are generally those required by these two
+   components. A more powerful CPU and more memory can improve performance, especially for complex queries on large datasets.
 
 ## References
 [Topological Network](https://docs.pgrouting.org/latest/en/pgr_createTopology.html)
