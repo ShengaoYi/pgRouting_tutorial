@@ -4,23 +4,15 @@
 
 ## Overview of GIS and SQL in Urban Analysis
 
-The rapid urbanization process has made urban management one of the paramount concerns in contemporary society.
-Cities not only serve as the residence for millions but also act as hubs for social, cultural, and economic activities.
-In this context, urban management authorities face a myriad of challenges, including addressing resident complaints and
-needs. In highly developed cities like New York City, the "311 request" system has become a crucial tool for governing
-urban affairs and meeting resident demands. This system allows residents to report issues and request various services,
-such as waste disposal, road maintenance, environmental concerns, and more.
+As cities evolve into denser and more complex hubs of activity, the processes of urban management grow increasingly challenging. Cities are not just homes to vast populations; they also serve as the epicenters of social, cultural, and economic exchange. For urban authorities, the multitude of responsibilities now includes promptly responding to a diverse array of resident complaints and service needs.
 
-However, efficiently allocating resources and addressing these requests necessitates a profound understanding of the
-spatial characteristics of the city. Different regions within a city possess distinct social, economic, and environmental
-features that could significantly influence the types, quantities, and distribution of 311 requests. Therefore, this study
-aims to explore the spatial relationship between 311 requests and urban characteristics in New York City to unveil the
-interaction patterns between these requests and the city. Specifically, we will investigate the spatiotemporal distribution
-of 311 requests and their correlations with factors such as population density, socio-economic indicators, environmental quality,
-and more.
+In metropolises like New York City, the "311 request" system stands as a cornerstone of urban governance, offering a direct line for residents to voice concerns and request services ranging from waste removal and street repairs to addressing environmental issues. The efficacy of such a system is not just in its capacity to collect reports but also in harnessing this data to optimize city services and enhance quality of life.
 
-This report explores an urban service request dataset, highlighting its value in spatial analysis using Geographic
-Information Systems (GIS) and SQL. The focus is on how these technologies can uncover insights into urban planning and public administration.
+Yet, the effective deployment of resources to address these requests requires a nuanced appreciation of the city's spatial dynamics. Each neighborhood exhibits unique social, economic, and environmental identities, which can reflect markedly in the nature and volume of 311 service requests. This project seeks to dissect the spatial patterns of 311 requests within New York City, revealing the interplay between citizen engagement and urban attributes.
+
+With a dataset rich in geospatial and temporal information, we leverage Geographic Information Systems (GIS) and SQL to delve into the spatial dimensions of urban service requests. Our quest is to shed light on the spatiotemporal distribution of these requests, investigating how they correlate with various urban factors such as population density, socioeconomic standings, and environmental indices.
+
+Through the course of this report, we will engage with the dataset to address three pivotal spatial questions. These inquiries will guide our exploration of the most common types of service requests within each census tract, the density of these requests, and the variance in service request types across neighborhoods. By dissecting this data, we aim to offer actionable insights that can inform urban planning and public service strategies, ultimately contributing to the refined orchestration of city life in New York.
 
 # Study Area and Dataset
 
