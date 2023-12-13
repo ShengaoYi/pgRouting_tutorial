@@ -51,7 +51,6 @@ The original dataset includes several columns:
 - **Unique Key**: A unique identifier for each service request.
 - **Created Date and Closed Date**: Timestamps for when the request was created and resolved.
 - **Agency**: The code and name of the city agency responsible for handling the request.
-- **Address**: The code and address type for the request.
 - **Complaint Type**: A classification of the request, along with a more detailed descriptor.
 - **Location Information**: Includes zip code, street address, and geographic coordinates (latitude and longitude).
 
@@ -74,6 +73,7 @@ The final schema is illustrated in an Entity-Relationship Diagram (ERD) that dep
 - **Agency**: Contains a list of agencies and their corresponding codes.
 - **Complaint**: Catalogs the types of complaints and associates them with unique codes.
 - **Location**: Includes location types and codes, which categorize the incident's place.
+- **Address**: The code and address type for the request.
 - **City**: Maintains a list of cities, identified by unique codes.
 - **Borough**: Keeps a record of borough names and their associated codes.
 
