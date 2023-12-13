@@ -51,6 +51,7 @@ The original dataset includes several columns:
 - **Unique Key**: A unique identifier for each service request.
 - **Created Date and Closed Date**: Timestamps for when the request was created and resolved.
 - **Agency**: The code and name of the city agency responsible for handling the request.
+- **Address**: The code and address type for the request.
 - **Complaint Type**: A classification of the request, along with a more detailed descriptor.
 - **Location Information**: Includes zip code, street address, and geographic coordinates (latitude and longitude).
 
