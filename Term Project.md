@@ -32,7 +32,7 @@ renowned as one of the most populous and economically vibrant cities in the worl
 Census tracts serve as spatial units of analysis in this study. We have 2,325 census tracts in total, allowing for a granular examination
 of the relationship between various urban-related indicators and 311 requests at a localized level within New York City.
 
-![NYC_census_tracts.jpg](..%2F..%2FPaper%2FHomelessness%2FFigures%2FNYC%20Borough%20Boundaries%2FNYC_census_tracts.jpg)
+![NYC_census_tracts.jpg](NYC_census_tracts.jpg)
 
 ## Dataset
 
